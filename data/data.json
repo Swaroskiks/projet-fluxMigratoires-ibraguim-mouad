@@ -1,0 +1,52 @@
+{
+  "datasets": [
+    {
+      "name": "Engoulevent bois-pourri de l'Est",
+      "scientific_name": "Antrostomus vociferus",
+      "source": "Movebank Data Repository",
+      "description": "Oiseau nocturne discret des forêts nord-américaines, connu pour son chant envoûtant au crépuscule.",
+      "output_file": "data/raw/antrostomus-vociferus.csv",
+      "movebank_id": "2007011428"
+    },
+    {
+      "name": "Bernache nonnette",
+      "scientific_name": "Branta leucopsis",
+      "source": "Movebank Data Repository",
+      "description": "Oie sociable au plumage noir et blanc, nichant dans l'Arctique et migrant vers l'Europe de l'Ouest.",
+      "output_file": "data/raw/branta-leucopsis.csv",
+      "movebank_id": "31888520"
+    },
+    {
+      "name": "Élaénie à cimier blanc",
+      "scientific_name": "Elaenia albiceps chilensis",
+      "source": "Movebank Data Repository",
+      "description": "Petit passereau d'Amérique du Sud, reconnaissable à sa huppe blanche et son chant mélodieux.",
+      "output_file": "data/raw/elaenia-albiceps-chilensis.csv",
+      "movebank_id": "178797918"
+    },
+    {
+      "name": "Baleine à bosse de la côte est australienne",
+      "scientific_name": "Megaptera novaeangliae",
+      "source": "Movebank Data Repository",
+      "description": "Grand cétacé célèbre pour ses sauts spectaculaires et ses chants complexes.",
+      "output_file": "data/raw/megaptera-novaeangliae.csv",
+      "movebank_id": "3030068329"
+    },
+    {
+      "name": "Sterne skimmer noire",
+      "scientific_name": "Rynchops niger cinerascens",
+      "source": "Movebank Data Repository",
+      "description": "Oiseau marin au bec unique, dont la mandibule inférieure plus longue rase l'eau pour attraper des poissons.",
+      "output_file": "data/raw/rynchops-niger-cinerascens.csv",
+      "movebank_id": "126103076"
+    },
+    {
+      "name": "Mouette de Sabine",
+      "scientific_name": "Xema sabini",
+      "source": "Movebank Data Repository",
+      "description": "Petite mouette élégante aux ailes grises bordées de noir, voyageant entre l'Arctique et les océans tropicaux.",
+      "output_file": "data/raw/xema-sabini.csv",
+      "movebank_id": "208672795"
+    }
+  ]
+}

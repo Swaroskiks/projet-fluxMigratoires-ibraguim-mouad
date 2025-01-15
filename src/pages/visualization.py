@@ -5,14 +5,14 @@ import pandas as pd
 import plotly.express as px
 
 # Chemin vers le fichier CSV contenant les données GPS
-csv_file_path = "../../data/cleaned/corrected_data.csv"
+csv_file_path = "data/cleaned/antrostomus_vociferus_cleaned.csv"
 
 # Charger les données depuis le fichier CSV
 try:
     df = pd.read_csv(csv_file_path)
 
     # Vérifier si les colonnes nécessaires sont présentes
-    required_columns = ["timestamp", "location-long", "location-lat", "event-id"]
+    required_columns = ["timestamp", "location_long", "location_lat", "event_id"]
     for col in required_columns:
         if col not in df.columns:
             raise ValueError(f"La colonne '{col}' est absente dans le fichier CSV.")
@@ -92,10 +92,10 @@ def update_map(map_mode, slider_index):
         # Carte classique avec des points GPS
         fig = px.scatter_mapbox(
             df,
-            lat="location-lat",
-            lon="location-long",
+            lat="location_lat",
+            lon="location_long",
             hover_name="timestamp",
-            hover_data={"event-id": True},
+            hover_data={"event_id": True},
             zoom=3,  # Niveau de zoom
             title="Trajectoires GPS",
         )
@@ -103,8 +103,8 @@ def update_map(map_mode, slider_index):
         # Mettre en évidence le point sélectionné
         if selected_point is not None:
             fig.add_scattermapbox(
-                lat=[selected_point["location-lat"]],
-                lon=[selected_point["location-long"]],
+                lat=[selected_point["location_lat"]],
+                lon=[selected_point["location_long"]],
                 mode="markers+text",
                 marker=dict(
                     size=15,  # Point plus grand
@@ -124,8 +124,8 @@ def update_map(map_mode, slider_index):
         # Carte de densité des données GPS
         fig = px.density_mapbox(
             df,
-            lat="location-lat",
-            lon="location-long",
+            lat="location_lat",
+            lon="location_long",
             z=None,  # Pas de valeur z pour afficher uniquement la densité
             radius=10,  # Taille du rayon pour la densité
             title="Densité des trajectoires GPS",
@@ -134,14 +134,14 @@ def update_map(map_mode, slider_index):
     elif map_mode == "trajectory":
         # Calculer la trajectoire moyenne
         grouped = df.groupby(df.index // 20).agg({
-            "location-lat": "mean",
-            "location-long": "mean",
+            "location_lat": "mean",
+            "location_long": "mean",
             "timestamp": "first"  # Conserver un timestamp représentatif
         }).reset_index(drop=True)
         fig = px.line_mapbox(
             grouped,
-            lat="location-lat",
-            lon="location-long",
+            lat="location_lat",
+            lon="location_long",
             title="Trajectoire Moyenne GPS",
             zoom=3,  # Niveau de zoom
         )
