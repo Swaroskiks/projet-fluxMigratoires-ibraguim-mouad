@@ -1,4 +1,5 @@
 from re import X
+from re import X
 from config import HOST, PORT, DEBUG
 from dash import Dash, html, page_container
 import dash_bootstrap_components as dbc

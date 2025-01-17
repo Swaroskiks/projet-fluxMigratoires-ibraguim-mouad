@@ -146,13 +146,11 @@ def update_stats(colors):
     
     avg_speed = int(total_speed / speed_count) if speed_count > 0 else 0
     
-    # Calcul rapide de l'amplitude en utilisant les points extrêmes
     lat_min_idx = df['location_lat'].idxmin()
     lat_max_idx = df['location_lat'].idxmax()
     lon_min_idx = df['location_long'].idxmin()
     lon_max_idx = df['location_long'].idxmax()
     
-    # Points extrêmes
     points = [
         (df.loc[lat_min_idx, 'location_lat'], df.loc[lat_min_idx, 'location_long']),
         (df.loc[lat_max_idx, 'location_lat'], df.loc[lat_max_idx, 'location_long']),
@@ -160,7 +158,6 @@ def update_stats(colors):
         (df.loc[lon_max_idx, 'location_lat'], df.loc[lon_max_idx, 'location_long'])
     ]
     
-    # Calcul des distances entre les points extrêmes
     max_distance = 0
     for i in range(len(points)):
         for j in range(i + 1, len(points)):
