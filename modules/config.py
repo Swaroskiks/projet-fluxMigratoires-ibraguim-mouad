@@ -5,7 +5,7 @@ from pathlib import Path
 load_dotenv()
 
 HOST = "127.0.0.1"
-PORT = 8020
+PORT = 8050
 DEBUG = True
 
 DATA_RAW_DIR = Path("data", "raw")
