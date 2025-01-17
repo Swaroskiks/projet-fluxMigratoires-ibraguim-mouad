@@ -7,10 +7,10 @@ import dash
 import plotly.graph_objects as go
 from plotly.subplots import make_subplots
 
-def calculate_monthly_speeds(df):
+def calculate_monthly_stats(df):
     df = df.sort_values(['individual_id', 'timestamp'])
     df['month'] = df['timestamp'].dt.month
-    monthly_speeds = []
+    monthly_stats = []
     
     for individual in df['individual_id'].unique():
         individual_data = df[df['individual_id'] == individual]
@@ -21,7 +21,8 @@ def calculate_monthly_speeds(df):
                 continue
                 
             speeds = []
-            distances = []
+            monthly_distance = 0
+            
             for i in range(len(month_data) - 1):
                 lat1 = month_data.iloc[i]['location_lat']
                 lon1 = month_data.iloc[i]['location_long']
@@ -36,19 +37,19 @@ def calculate_monthly_speeds(df):
                 if distance <= 300 and time_diff > 0:
                     speed = distance / time_diff
                     speeds.append(speed)
-                    distances.append(distance)
+                    monthly_distance += distance
             
             if speeds:
-                monthly_speeds.append({
+                monthly_stats.append({
                     'month': month,
                     'speed': sum(speeds) / len(speeds),
-                    'amplitude': max(distances) if distances else 0
+                    'distance': monthly_distance
                 })
     
-    monthly_df = pd.DataFrame(monthly_speeds)
+    monthly_df = pd.DataFrame(monthly_stats)
     return monthly_df.groupby('month').agg({
         'speed': 'mean',
-        'amplitude': 'max'
+        'distance': 'sum'
     }).reset_index()
 
 def create_distance_histogram():
@@ -68,7 +69,7 @@ def update_stats(colors):
         9: 'Septembre', 10: 'Octobre', 11: 'Novembre', 12: 'Décembre'
     }
 
-    fig = make_subplots(rows=2, cols=1, subplot_titles=('Vitesse moyenne par mois (km/h)', 'Amplitude par mois (km)'))
+    fig = make_subplots(rows=2, cols=1, subplot_titles=('Vitesse moyenne par mois (km/h)', 'Distance parcourue par mois (km)'))
     
     if not colors or 'primary' not in colors:
         months = list(month_names.values())
@@ -87,7 +88,7 @@ def update_stats(colors):
             go.Bar(
                 x=months,
                 y=empty_values,
-                name='Amplitude'
+                name='Distance'
             ),
             row=2, col=1
         )
@@ -99,7 +100,7 @@ def update_stats(colors):
         )
         
         fig.update_yaxes(title_text="Vitesse (km/h)", row=1, col=1)
-        fig.update_yaxes(title_text="Amplitude (km)", row=2, col=1)
+        fig.update_yaxes(title_text="Distance (km)", row=2, col=1)
         
         return fig
     
@@ -108,7 +109,7 @@ def update_stats(colors):
     selected_species = data['datasets'][selected_index]['id']
     
     df = load_species_data_from_csv(selected_species)
-    monthly_stats = calculate_monthly_speeds(df)
+    monthly_stats = calculate_monthly_stats(df)
     monthly_stats['month_name'] = monthly_stats['month'].map(month_names)
     
     fig.add_trace(
@@ -123,8 +124,8 @@ def update_stats(colors):
     fig.add_trace(
         go.Bar(
             x=monthly_stats['month_name'],
-            y=monthly_stats['amplitude'],
-            name='Amplitude'
+            y=monthly_stats['distance'],
+            name='Distance'
         ),
         row=2, col=1
     )
@@ -136,6 +137,6 @@ def update_stats(colors):
     )
     
     fig.update_yaxes(title_text="Vitesse (km/h)", row=1, col=1)
-    fig.update_yaxes(title_text="Amplitude (km)", row=2, col=1)
+    fig.update_yaxes(title_text="Distance (km)", row=2, col=1)
     
     return fig
