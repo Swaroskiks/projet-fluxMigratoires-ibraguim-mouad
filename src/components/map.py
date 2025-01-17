@@ -58,16 +58,32 @@ def update_map_mode(mode_clicks, mode_ids):
 
     return colors
 
+def generate_empty_map_figure():
+    fig = px.scatter_mapbox(
+        pd.DataFrame({'location_lat': [], 'location_long': []}),
+        lat="location_lat",
+        lon="location_long",
+        zoom=2
+    )
+    fig.update_layout(
+        mapbox_style="open-street-map",
+        margin={"l": 0, "r": 0, "t": 0, "b": 0},
+        showlegend=False,
+    )
+    return fig
+
 def create_map() -> html.Div:
     """Assemble les contrôles et la carte."""
+    fig = generate_empty_map_figure() 
+
     return html.Div(
         [
             create_map_controls(),
             dcc.Graph(
                 id="map",
-                figure={},
+                figure=fig,
                 style={
-                    "height": "60vh",
+                    "height": "67vh",
                     "borderRadius": "15px",
                     "boxShadow": "0 4px 8px rgba(0, 0, 0, 0.1)",
                 },
@@ -109,3 +125,19 @@ def generate_map_figure(
         showlegend=False,
     )
     return fig
+
+@callback(
+    Output("map", "figure"),
+    [Input("app-state", "data"),
+     Input("current-data", "data")],
+    prevent_initial_call=True
+)
+def update_map(app_state, current_data):
+    """Met à jour la carte en fonction du mode et des données."""
+    if not app_state or not current_data:
+        return dash.no_update
+    
+    df = pd.DataFrame(current_data)
+    mode = app_state.get('view_mode', 'scatter') if app_state else 'scatter'
+    
+    return generate_map_figure(df, mode)

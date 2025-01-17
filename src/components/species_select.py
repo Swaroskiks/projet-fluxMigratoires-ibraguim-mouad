@@ -2,7 +2,7 @@ import json
 import dash
 from dash import html, callback, Input, Output, State
 import dash_bootstrap_components as dbc
-from src.utils import load_species_metadata, state
+from src.utils import load_species_metadata
 
 def create_species_select() -> html.Div:
     data = load_species_metadata()
