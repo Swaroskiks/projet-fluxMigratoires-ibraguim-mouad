@@ -1,8 +1,8 @@
 from dash import html, dcc, callback, Input, Output, ALL
 import plotly.express as px
 import pandas as pd
-from src.utils.data_manager import load_species_data_from_csv, load_species_metadata
-from src.components.map import haversine_distance
+from src.utils import load_species_data_from_csv, load_species_metadata
+from src.components import haversine_distance
 import dash
 import plotly.graph_objects as go
 from plotly.subplots import make_subplots

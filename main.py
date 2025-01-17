@@ -6,8 +6,8 @@ import dash_bootstrap_components as dbc
 from src.components import create_header, create_footer
 from src.utils import download_all_species_data, clean_all_species_data
 
-#download_all_species_data()
-#clean_all_species_data()
+download_all_species_data()
+clean_all_species_data()
 
 app = Dash(
     __name__,

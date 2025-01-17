@@ -1,9 +1,7 @@
 from dash import html, register_page, callback, Input, Output, ALL
 import dash_bootstrap_components as dbc
-from src.components.species_select import create_species_select
-from src.components.distance_histogram import create_distance_histogram
-from src.utils.data_manager import load_species_data_from_csv, load_species_metadata
-from src.components.map import haversine_distance
+from src.components import create_species_select, create_distance_histogram, create_distance_histogram, haversine_distance
+from src.utils import load_species_data_from_csv, load_species_metadata
 
 register_page(__name__, path='/')
 
