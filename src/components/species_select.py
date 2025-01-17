@@ -1,8 +1,10 @@
-from dash import html
+import json
+import dash
+from dash import html, callback, Input, Output, State
 import dash_bootstrap_components as dbc
-from src.utils import load_species_metadata
+from src.utils import load_species_metadata, state
 
-def create_species_selector() -> html.Div:
+def create_species_select() -> html.Div:
     data = load_species_metadata()
 
     species_cards = [
@@ -41,3 +43,24 @@ def create_species_selector() -> html.Div:
         html.H5("Sélectionnez une espèce :"),
         html.Div(species_cards, style={"overflowY": "auto", "height": "70vh"})
     ])
+
+@callback(
+    Output({'type': 'species-button', 'index': dash.dependencies.ALL}, 'color'),
+    Input({'type': 'species-button', 'index': dash.dependencies.ALL}, 'n_clicks'),
+    State({'type': 'species-button', 'index': dash.dependencies.ALL}, 'id'),
+    prevent_initial_call=True
+)
+def update_species_selection(species_clicks, species_ids):
+    ctx = dash.callback_context
+    
+    if not ctx.triggered:
+        return dash.no_update
+    
+    trigger_id = json.loads(ctx.triggered[0]['prop_id'].split('.')[0])
+    colors = ['light' for _ in species_ids]
+    
+    if trigger_id['type'] == 'species-button':
+        selected_idx = trigger_id['index']
+        colors[selected_idx] = 'primary'
+
+    return colors

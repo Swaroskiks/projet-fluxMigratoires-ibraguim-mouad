@@ -34,7 +34,7 @@ def update_visualization(mode_clicks, species_clicks):
     trigger = ctx.triggered[0]['prop_id']
 
     if 'map-mode' in trigger:
-        button_id = json.loads(trigger.split( '.')[0])
+        button_id = json.loads(trigger.split('.')[0])
         state.view_mode = button_id['mode']
 
     elif 'species-button' in trigger:

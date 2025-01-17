@@ -41,7 +41,6 @@ def filter_outliers(data):
 
 def clean_data(data):
     essential_columns = [
-        'individual_id',
         'timestamp',
         'location_long',
         'location_lat',
