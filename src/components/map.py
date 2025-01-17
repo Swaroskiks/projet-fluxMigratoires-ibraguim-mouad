@@ -1,4 +1,6 @@
-from dash import html, dcc
+import json
+import dash
+from dash import html, dcc, callback, Input, Output, State
 import dash_bootstrap_components as dbc
 import plotly.express as px
 import pandas as pd
@@ -33,6 +35,28 @@ def create_map_controls() -> html.Div:
             )
         ]
     )
+
+@callback(
+    Output({'type': 'map-mode', 'mode': dash.dependencies.ALL}, 'color'),
+    Input({'type': 'map-mode', 'mode': dash.dependencies.ALL}, 'n_clicks'),
+    State({'type': 'map-mode', 'mode': dash.dependencies.ALL}, 'id'),
+    prevent_initial_call=True
+)
+def update_map_mode(mode_clicks, mode_ids):
+    ctx = dash.callback_context
+
+    if not ctx.triggered:
+        return dash.no_update
+
+    trigger_id = json.loads(ctx.triggered[0]['prop_id'].split('.')[0])
+    colors = ['secondary' for _ in mode_ids]
+
+    if trigger_id['type'] == 'map-mode':
+        mode = trigger_id['mode']
+        for idx, mode_id in enumerate(mode_ids):
+            colors[idx] = 'primary' if mode_id['mode'] == mode else 'secondary'
+
+    return colors
 
 def create_map() -> html.Div:
     """Assemble les contrôles et la carte."""

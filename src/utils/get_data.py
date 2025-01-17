@@ -5,8 +5,6 @@ import requests
 import hashlib
 from src.utils.data_manager import load_species_metadata
 
-load_dotenv()
-
 def download_movebank_data(movebank_id, output_file):
     session = requests.Session()
     
