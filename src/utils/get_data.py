@@ -1,23 +1,12 @@
-import requests
-import json
 import os
-from pathlib import Path
+from dotenv import load_dotenv
+from config import MOVEBANK_BASE_URL, MOVEBANK_USERNAME, MOVEBANK_PASSWORD, DATA_RAW_DIR
+import requests
 import hashlib
+from src.utils.data_manager import load_species_metadata
 
-# Informations d'identification
-username = "MouadM"
-password = "gyzgij4kovcugirsuQ$&"
+load_dotenv()
 
-# URL pour l'API Movebank
-url = f"https://www.movebank.org/movebank/service/direct-read"
-
-# Charge les informations sur les espèces depuis data.json
-def load_species_data():
-    data_path = "data/data.json"
-    with open(data_path, 'r', encoding='utf-8') as file:
-        return json.load(file)
-
-# Fonction pour télécharger les données d'une étude via son ID
 def download_movebank_data(movebank_id, output_file):
     session = requests.Session()
     
@@ -28,7 +17,7 @@ def download_movebank_data(movebank_id, output_file):
     }
     
     # Première requête pour récupérer les termes de licence
-    response = session.get(url, params=params, auth=(username, password))
+    response = session.get(MOVEBANK_BASE_URL, params=params, auth=(MOVEBANK_USERNAME, MOVEBANK_PASSWORD))
     
     if "License Terms:" in response.text:
         print("[INFO] Acceptation des termes de la licence...")
@@ -40,7 +29,7 @@ def download_movebank_data(movebank_id, output_file):
 
         # Nouvelle requête avec le hash MD5
         params["license-md5"] = md5_hash
-        response = session.get(url, params=params, auth=(username, password))
+        response = session.get(MOVEBANK_BASE_URL, params=params, auth=(MOVEBANK_USERNAME, MOVEBANK_PASSWORD))
 
     # Vérification et sauvegarde
     if response.status_code == 200 and not response.text.startswith("<html>"):
@@ -53,21 +42,17 @@ def download_movebank_data(movebank_id, output_file):
         print("[DEBUG] Contenu de la réponse :", response.text[:500])
         return False
 
-# Lecture du fichier data.json pour télécharger les données de toutes les espèces 
 def download_all_species_data():
-    data = load_species_data()
+    species_metadata = load_species_metadata()
     success_count = 0
-    total_count = len(data['datasets'])
+    total_count = len(species_metadata['datasets'])
 
-    for dataset in data['datasets']:
+    for dataset in species_metadata['datasets']:
         movebank_id = dataset['movebank_id']
-        output_file = dataset['output_file']
+        output_file = os.path.join(DATA_RAW_DIR, f"{dataset['id']}_raw.csv")
         
         print(f"\n[INFO] Téléchargement des données pour {dataset['name']} (ID: {movebank_id})")
-        if download_movebank_data(movebank_id, str(output_file)):
+        if download_movebank_data(movebank_id, output_file):
             success_count += 1
 
     print(f"\n[INFO] Téléchargement terminé : {success_count}/{total_count} études téléchargées avec succès")
-
-if __name__ == "__main__":
-    download_all_species_data()

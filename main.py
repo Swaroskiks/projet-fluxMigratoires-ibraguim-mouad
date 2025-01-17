@@ -1,20 +1,27 @@
-# Fichier principal permettant de lancer le dashboard
-from dash import Dash
+from config import HOST, PORT, DEBUG
+from dash import Dash, html, page_container
 import dash_bootstrap_components as dbc
+from src.components import create_header, create_footer
+from src.utils import download_all_species_data, clean_all_species_data
 
-# Initialisation de l'application Dash
+download_all_species_data()
+clean_all_species_data()
+
 app = Dash(
     __name__,
     external_stylesheets=[dbc.themes.BOOTSTRAP],
-    assets_folder='assets'
+    assets_folder='assets',
+    use_pages=True,
+    pages_folder='src/pages'
 )
 
-# Titre de l'application
-app.title = "Visualisation des Flux Migratoires"
+app.title = "Flux Migratoires"
 
-# Mise en page principale
-# app.layout = 
+app.layout = html.Div([
+    create_header(),
+    page_container,
+    create_footer()
+])
 
-# Point d'entrée de l'application
 if __name__ == '__main__':
-    app.run_server(debug=True, port=8050)
+    app.run_server(host=HOST, port=PORT, debug=DEBUG)
