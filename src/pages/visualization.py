@@ -14,7 +14,7 @@ def layout() -> html.Div:
         dcc.Store(id='current-data', storage_type='memory'),
 
         dbc.Row([
-            dbc.Col(html.H1("Visualisation des Migrations", className="text-center mb-4"), width=12),
+            dbc.Col(html.H1("Visualisation des Migrations", className="text-center mb-4 mt-4"), width=12),
             dbc.Col(create_species_select(), width=3),
             dbc.Col([
                 create_map()
