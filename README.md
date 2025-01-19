@@ -49,41 +49,42 @@ The dataset used in this project is sourced from [MoveBank](https://www.movebank
 ## **Developer Guide**
 
 ### **Project Structure**
-```plaintext
-projet-fluxMigratoires-ibraguim-mouad
-|-- .gitignore
-|-- .venv
-|-- .env.example
-|-- config.py
-|-- data
-|   |-- cleaned
-|   |   |-- cleaneddata.csv
-|   |-- raw
-|       |-- rawdata.csv
-|-- assets
-|   |-- images
-|   |   |-- species
-|-- main.py
-|-- README.md
-|-- requirements.txt
-|-- src
-|   |-- components
-|   |   |-- home
-|   |   |   |-- distance_histogram.py
-|   |   |-- shared
-|   |   |   |-- footer.py
-|   |   |   |-- header.py
-|   |   |   |-- species_select.py
-|   |   |-- visualization
-|   |   |   |-- map.py
-|   |-- pages
-|   |   |-- home.py
-|   |   |-- visualization.py
-|   |-- utils
-|       |-- clean_data.py
-|       |-- data_manager.py
-|       |-- get_data.py
-|-- video.mp4
+```mermaid
+graph TD
+    A[projet-fluxMigratoires-ibraguim-mouad]
+    A --> B[.gitignore]
+    A --> C[.venv]
+    A --> D[.env.example]
+    A --> E[config.py]
+    A --> F[data]
+    F --> G[cleaned]
+    G --> H[cleaneddata.csv]
+    F --> I[raw]
+    I --> J[rawdata.csv]
+    A --> K[assets]
+    K --> L[images]
+    L --> M[species]
+    A --> N[main.py]
+    A --> O[README.md]
+    A --> P[requirements.txt]
+    A --> Q[src]
+    Q --> R[components]
+    R --> S[home]
+    S --> T[distance_histogram.py]
+    R --> U[shared]
+    U --> V[footer.py]
+    U --> W[header.py]
+    U --> X[species_select.py]
+    R --> Y[visualization]
+    Y --> Z[map.py]
+    Q --> AA[pages]
+    AA --> AB[home.py]
+    AA --> AC[visualization.py]
+    Q --> AD[utils]
+    AD --> AE[clean_data.py]
+    AD --> AF[data_manager.py]
+    AD --> AG[get_data.py]
+    A --> AH[video.mp4]
 ```
 
 
