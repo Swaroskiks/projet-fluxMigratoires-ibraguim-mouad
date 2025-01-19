@@ -21,7 +21,7 @@ The Flux Migration Dashboard provides an interactive visualization of global mig
    ```
 3. **Configure the environment variables** \
    Rename the file .env.example to .env.
-   Add the following API credentials to the .env file:
+   Add the following API credentials to the .env file
    ```
    MOVEBANK_USERNAME=ESIEE_TEST
    MOVEBANK_PASSWORD=kedhu3ripruhpEtbyk
