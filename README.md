@@ -122,12 +122,9 @@ projet-fluxMigratoires-ibraguim-mouad
 ---
 
 ## **Copyright**
-
-I hereby declare that the code provided in this project was created solely by Mouad MOUSTARZAK a, except for the following portions:
-- [List specific borrowed code snippets, their sources, and explanations].
+We hereby declare that the code provided in this project was created solely by Mouad Moustarzak and Ibraguim Temirkaev.
 
 All other code is original, and failure to attribute any external source will be considered plagiarism.
-
 ---
 
 ## **Video Demonstration**
