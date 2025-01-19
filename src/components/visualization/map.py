@@ -212,46 +212,16 @@ def generate_map_figure(df: pd.DataFrame, mode: str = "scatter", selected_point:
         fig = go.Figure()
         
         for individual in df['individual_id'].unique():
-            individual_data = df[df['individual_id'] == individual]
+            individual_data = df[df['individual_id'] == individual].sort_values('timestamp')
             
-            valid_lats = []
-            valid_lons = []
-            
-            for i in range(len(individual_data) - 1):
-                lat1 = individual_data.iloc[i]['location_lat']
-                lon1 = individual_data.iloc[i]['location_long']
-                lat2 = individual_data.iloc[i + 1]['location_lat']
-                lon2 = individual_data.iloc[i + 1]['location_long']
-                
-                distance = haversine_distance(lat1, lon1, lat2, lon2)
-                
-                if i == 0:
-                    valid_lats.append(lat1)
-                    valid_lons.append(lon1)
-                
-                if distance <= 300:
-                    valid_lats.append(lat2)
-                    valid_lons.append(lon2)
-                else:
-                    if len(valid_lats) > 0:
-                        fig.add_trace(go.Scattermapbox(
-                            lat=valid_lats,
-                            lon=valid_lons,
-                            mode='lines',
-                            line=dict(width=3, color='blue'),
-                            showlegend=False
-                        ))
-                    valid_lats = [lat2]
-                    valid_lons = [lon2]
-            
-            if len(valid_lats) > 0:
-                fig.add_trace(go.Scattermapbox(
-                    lat=valid_lats,
-                    lon=valid_lons,
-                    mode='lines',
-                    line=dict(width=3, color='blue'),
-                    showlegend=False
-                ))
+            fig.add_trace(go.Scattermapbox(
+                lat=individual_data['location_lat'],
+                lon=individual_data['location_long'],
+                mode='lines+markers',
+                line=dict(width=2, color='blue'),
+                marker=dict(size=4, color='blue'),
+                showlegend=False
+            ))
     
     fig.update_layout(
         mapbox_style="open-street-map",
