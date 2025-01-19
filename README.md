@@ -19,7 +19,7 @@ The Flux Migration Dashboard provides an interactive visualization of global mig
    source .venv\Scripts\activate  # On MacOS/Linux: .venv/bin/activate
    pip install -r requirements.txt
    ```
-3. **Configure the environment variables**:
+3. **Configure the environment variables** \
    Rename the file .env.example to .env.
    Add the following API credentials to the .env file:
    ```
