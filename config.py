@@ -21,7 +21,7 @@ HOST: Final[str] = "127.0.0.1"
 PORT: Final[int] = 8050
 """Server listening port (default: 8050)."""
 
-DEBUG: Final[bool] = True
+DEBUG: Final[bool] = False
 """Enable debug mode (True) or not (False)."""
 
 # ----------------------------

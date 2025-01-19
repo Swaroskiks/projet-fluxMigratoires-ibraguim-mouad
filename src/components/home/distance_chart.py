@@ -1,18 +1,19 @@
 """Distance Chart Component."""
 
+from typing import List
 from dash import html, dcc, callback, Input, Output, ALL
 import plotly.graph_objects as go
 import pandas as pd
 from src.utils.data_manager import load_species_data_from_csv, load_species_metadata
 from src.components.visualization.map import haversine_distance
 
-def create_distance_chart():
+def create_distance_chart() -> html.Div:
     """Create the distance chart component."""
     return html.Div([
         dcc.Graph(id='distance-chart')
     ])
 
-def calculate_monthly_distance(df):
+def calculate_monthly_distance(df: pd.DataFrame) -> pd.DataFrame:
     """Calculate total distance traveled per month.
     
     Args:
@@ -33,7 +34,7 @@ def calculate_monthly_distance(df):
             if len(month_data) < 2:
                 continue
                 
-            monthly_distance = 0
+            monthly_distance: float = 0
             
             # Calcul des distances entre points consécutifs
             for i in range(len(month_data) - 1):
@@ -62,7 +63,7 @@ def calculate_monthly_distance(df):
     [Input({'type': 'species-button', 'index': ALL}, 'color')],
     prevent_initial_call=True
 )
-def update_distance_chart(colors):
+def update_distance_chart(colors: List[str]) -> go.Figure:
     """Update distance chart based on species selection."""
     month_names = {
         1: 'Janvier', 2: 'Février', 3: 'Mars', 4: 'Avril',
