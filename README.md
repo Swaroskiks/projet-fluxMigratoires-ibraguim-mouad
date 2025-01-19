@@ -19,13 +19,19 @@ The Flux Migration Dashboard provides an interactive visualization of global mig
    source .venv\Scripts\activate  # On MacOS/Linux: .venv/bin/activate
    pip install -r requirements.txt
    ```
-
-3. **Run the dashboard**:
+3. **Configure the environment variables** \
+   Rename the file .env.example to .env.
+   Add the following API credentials to the .env file
+   ```
+   MOVEBANK_USERNAME=ESIEE_TEST
+   MOVEBANK_PASSWORD=kedhu3ripruhpEtbyk
+   ```
+4. **Run the dashboard**:
    ```bash
    python main.py
    ```
 
-4. **Access the dashboard**:
+5. **Access the dashboard**:
    Open your browser and navigate to `http://127.0.0.1:8050/`.
 
 ---
