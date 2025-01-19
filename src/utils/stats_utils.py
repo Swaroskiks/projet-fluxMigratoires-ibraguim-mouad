@@ -8,7 +8,7 @@ Provides functions to calculate various migration statistics, including:
 
 from typing import List, Tuple
 import pandas as pd
-from src.components import haversine_distance
+from src.components.visualization.map import haversine_distance
 
 def calculate_speed(row1: pd.Series, row2: pd.Series) -> float:
     """Calculate speed between two points.
