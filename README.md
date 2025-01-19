@@ -20,8 +20,9 @@ The Flux Migration Dashboard provides an interactive visualization of global mig
    pip install -r requirements.txt
    ```
 3. **Configure the environment variables**:
-   ```Rename the file .env.example to .env.
+   Rename the file .env.example to .env.
    Add the following API credentials to the .env file:
+   ```
    MOVEBANK_USERNAME=ESIEE_TEST
    MOVEBANK_PASSWORD=kedhu3ripruhpEtbyk
    ```
@@ -30,7 +31,7 @@ The Flux Migration Dashboard provides an interactive visualization of global mig
    python main.py
    ```
 
-+5. **Access the dashboard**:
+5. **Access the dashboard**:
    Open your browser and navigate to `http://127.0.0.1:8050/`.
 
 ---
