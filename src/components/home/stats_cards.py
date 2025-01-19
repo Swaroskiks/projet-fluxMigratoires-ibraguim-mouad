@@ -66,8 +66,8 @@ def _generate_stats_cards(species_data: Optional[pd.DataFrame] = None) -> List[d
     """
     if not species_data:
         return [
-            create_stat_card("Distance moyenne de migration", 0, "km"),
-            create_stat_card("Durée moyenne de migration", 0, "jours"),
+            create_stat_card("Distance moyenne parcourue", 0, "km"),
+            create_stat_card("Durée de l'étude", 0, "jours"),
             create_stat_card("Vitesse moyenne", 0, "km/h"),
             create_stat_card("Amplitude maximale", 0, "km")
         ]
