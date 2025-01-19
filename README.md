@@ -134,8 +134,3 @@ This project highlights how geospatial data can be used to analyze and understan
 All other code is original, and failure to attribute any external source will be considered plagiarism.
 
 ---
-
-## **Video Demonstration**
-[lien vers la video sur git]
-
----
