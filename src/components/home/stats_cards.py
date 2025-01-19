@@ -1,3 +1,14 @@
+"""Component to display key statistics in the form of cards.
+
+Displayed metrics:
+- Average migration distance
+- Average migration duration
+- Average migration speed
+- Maximum migration amplitude
+"""
+
+from typing import List, Union, Optional
+import pandas as pd
 from dash import html, callback, Input, Output, ALL
 import dash_bootstrap_components as dbc
 from src.utils import (
@@ -8,8 +19,17 @@ from src.utils import (
     calculate_max_amplitude
 )
 
-def create_stat_card(title, value, unit=""):
-    """Crée une carte de statistique."""
+def create_stat_card(title: str, value: Union[int, float, str], unit: str = "") -> dbc.Card:
+    """Create a statistical card displaying a title, value, and unit.
+    
+    Args:
+        title (str): The title of the card.
+        value (Union[int, float, str]): The value to display.
+        unit (str, optional): The unit of the value. Defaults to "".
+    
+    Returns:
+        dbc.Card: The statistical card.
+    """
     return dbc.Card(
         dbc.CardBody([
             html.H6(title, className="card-subtitle text-muted"),
@@ -21,15 +41,29 @@ def create_stat_card(title, value, unit=""):
         className="mb-4 text-center shadow-sm"
     )
 
-def create_stats_cards(species_data=None):
-    """Crée l'ensemble des cartes de statistiques."""
+def create_stats_cards(species_data: Optional[pd.DataFrame] = None) -> html.Div:
+    """Create a container with all statistical cards.
+    
+    Args:
+        species_data (Optional[pd.DataFrame], optional): Species data. Defaults to None.
+    
+    Returns:
+        html.Div: Container with all statistical cards.
+    """
     return html.Div(
         id="stats-cards",
         children=_generate_stats_cards(species_data)
     )
 
-def _generate_stats_cards(species_data):
-    """Génère le contenu des cartes de statistiques."""
+def _generate_stats_cards(species_data: Optional[pd.DataFrame] = None) -> List[dbc.Card]:
+    """Generate the content for the statistical cards.
+    
+    Args:
+        species_data (Optional[pd.DataFrame], optional): Species data. Defaults to None.
+    
+    Returns:
+        List[dbc.Card]: List of statistical cards.
+    """
     if not species_data:
         return [
             create_stat_card("Distance moyenne de migration", 0, "km"),
@@ -55,7 +89,15 @@ def _generate_stats_cards(species_data):
     Output("stats-cards", "children"),
     [Input({'type': 'species-button', 'index': ALL}, 'color')]
 )
-def update_stats(colors):
+def update_stats(colors: List[str]) -> List[dbc.Card]:
+    """Update the statistical cards based on the selected species.
+    
+    Args:
+        colors (List[str]): List of colors.
+    
+    Returns:
+        List[dbc.Card]: List of statistical cards.
+    """
     if not colors or 'primary' not in colors:
         return _generate_stats_cards(None)
     

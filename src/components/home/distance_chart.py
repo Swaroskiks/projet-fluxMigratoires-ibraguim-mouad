@@ -1,15 +1,26 @@
+"""Component for visualizing monthly migration distances.
+
+Displays a graph of distances traveled per month to observe
+seasonal variations and identify active migration periods.
+"""
+
+from typing import List
 from dash import html, dcc, callback, Input, Output, ALL
 import plotly.graph_objects as go
 import dash_bootstrap_components as dbc
-import pandas as pd
 from src.utils import (
     load_species_data_from_csv, 
     load_species_metadata,
     calculate_monthly_distances
 )
 
-def create_distance_chart():
-    """Crée le graphique des distances mensuelles."""
+def create_distance_chart() -> html.Div:
+    """
+    Creates the monthly distance chart.
+    
+    Returns:
+        html.Div: Dash component containing the chart.
+    """
     return html.Div([
         dbc.Card([
             dbc.CardBody([
@@ -25,76 +36,58 @@ def create_distance_chart():
     Output('monthly-distances', 'figure'),
     [Input({'type': 'species-button', 'index': ALL}, 'color')]
 )
-def update_distance_chart(colors):
-    """Met à jour le graphique des distances mensuelles."""
-    month_names = {
-        1: 'Janvier', 2: 'Février', 3: 'Mars', 4: 'Avril',
-        5: 'Mai', 6: 'Juin', 7: 'Juillet', 8: 'Août',
-        9: 'Septembre', 10: 'Octobre', 11: 'Novembre', 12: 'Décembre'
-    }
+def update_distance_chart(colors: List[str]) -> go.Figure:
+    """Update the monthly distance chart based on the selected species.
     
+    Args:
+        colors (List[str]): List of colors.
+    
+    Returns:
+        go.Figure: Distance chart figure.
+    """
     fig = go.Figure()
     
-    if not colors or 'primary' not in colors:
-        months = list(month_names.values())
-        empty_values = [0] * len(months)
-        
-        fig.add_trace(
-            go.Bar(
-                x=months,
-                y=empty_values,
-                name='Distance'
-            )
-        )
-        
-        fig.update_layout(
-            height=300,
-            showlegend=False,
-            margin=dict(t=30, b=0, l=0, r=0),
-            title={
-                'text': 'Distance parcourue par mois (km)',
-                'x': 0.5,
-                'y': 0.95
-            },
-            yaxis_title="Distance (km)",
-            plot_bgcolor='white',
-            paper_bgcolor='white'
-        )
-        
-        return fig
-    
-    selected_index = colors.index('primary')
-    data = load_species_metadata()
-    selected_species = data['datasets'][selected_index]['id']
-    df = load_species_data_from_csv(selected_species)
-    
-    monthly_stats = calculate_monthly_distances(df)
-    if len(monthly_stats) == 0:
-        return fig
-    
-    monthly_stats['month_name'] = monthly_stats['month'].map(month_names)
-    monthly_stats = monthly_stats.sort_values('month')
-    
-    fig.add_trace(
-        go.Bar(
-            x=monthly_stats['month_name'],
-            y=monthly_stats['avg_distance'],
-            name='Distance'
-        )
-    )
-    
+    # Default layout
     fig.update_layout(
-        height=300,
-        showlegend=False,
-        margin=dict(t=30, b=0, l=0, r=0),
-        title={
-            'text': 'Distance parcourue par mois (km)',
-            'x': 0.5,
-            'y': 0.95
-        },
+        title="Distance parcourue par mois",
+        xaxis_title="Mois",
         yaxis_title="Distance (km)",
-        plot_bgcolor='white',
-        paper_bgcolor='white'
+        showlegend=True,
+        template='plotly_white',
+        height=400
     )
-    
+
+    if not colors or 'primary' not in colors:
+        return fig
+
+    try:
+        selected_index = colors.index('primary')
+        data = load_species_metadata()
+        selected_species = data['datasets'][selected_index]['id']
+        df = load_species_data_from_csv(selected_species)
+        
+        if df.empty:
+            return fig
+            
+        monthly_stats = calculate_monthly_distances(df)
+        if monthly_stats.empty:
+            return fig
+        
+        monthly_stats['month_name'] = monthly_stats['month'].dt.strftime('%B')  # Use datetime strftime instead of map
+        monthly_stats = monthly_stats.sort_values('month')
+        
+        # Add trace for each individual
+        for individual in monthly_stats['individual'].unique():
+            ind_data = monthly_stats[monthly_stats['individual'] == individual]
+            fig.add_trace(go.Scatter(
+                x=ind_data['month_name'],
+                y=ind_data['distance'],
+                name=f'Individual {individual}',
+                mode='lines+markers'
+            ))
+            
+    except Exception as e:
+        print(f"Error updating distance chart: {str(e)}")
+        return fig
+
     return fig

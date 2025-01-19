@@ -1,3 +1,5 @@
+"""Module for the application's reusable components."""
+
 from .shared.header import create_header
 from .shared.footer import create_footer
 from .visualization.map import create_map, generate_map_figure, haversine_distance

@@ -1,3 +1,12 @@
+"""Map Visualization Component for Migration Data.
+
+Features:
+- Points Mode: Visualization of individual positions colored by season.
+- Density Mode: Display areas of concentration with a density scale.
+- Trajectory Mode: Trace individual movements with anomaly filtering.
+"""
+
+from typing import Dict, Any, List, Optional
 import json
 import dash
 from dash import html, dcc, callback, Input, Output, State
@@ -5,12 +14,22 @@ import dash_bootstrap_components as dbc
 import plotly.express as px
 import plotly.graph_objects as go
 import pandas as pd
-from pathlib import Path
 import math
 from datetime import datetime
 
-def haversine_distance(lat1, lon1, lat2, lon2):
-    R = 6371 
+def haversine_distance(lat1: float, lon1: float, lat2: float, lon2: float) -> float:
+    """Calculate the distance in kilometers between two geographic points.
+
+    Args:
+        lat1 (float): Latitude of the first point.
+        lon1 (float): Longitude of the first point.
+        lat2 (float): Latitude of the second point.
+        lon2 (float): Longitude of the second point.
+
+    Returns:
+        float: Distance in kilometers between the two points.
+    """
+    R = 6371  # Radius of the Earth in kilometers
     lat1, lon1, lat2, lon2 = map(math.radians, [lat1, lon1, lat2, lon2])
     dlat = lat2 - lat1
     dlon = lon2 - lon1
@@ -18,7 +37,12 @@ def haversine_distance(lat1, lon1, lat2, lon2):
     c = 2 * math.asin(math.sqrt(a))
     return R * c
 
-def create_map_controls():
+def create_map_controls() -> html.Div:
+    """Create the controls for switching map visualization modes.
+
+    Returns:
+        html.Div: Dash component with buttons for mode selection.
+    """
     return html.Div(
         [
             dbc.ButtonGroup(
@@ -53,9 +77,17 @@ def create_map_controls():
     State({'type': 'map-mode', 'mode': dash.dependencies.ALL}, 'id'),
     prevent_initial_call=True
 )
-def update_map_mode(mode_clicks, mode_ids):
-    ctx = dash.callback_context
+def update_map_mode(mode_clicks: List[int], mode_ids: List[Dict[str, Any]]) -> List[str]:
+    """Update the button colors to indicate the selected map mode.
 
+    Args:
+        mode_clicks (List[int]): Click counts for each button.
+        mode_ids (List[Dict[str, Any]]): Identifiers of the buttons.
+
+    Returns:
+        list: Colors for the buttons ('primary' for selected, 'secondary' for others).
+    """
+    ctx = dash.callback_context
     if not ctx.triggered:
         return dash.no_update
 
@@ -69,7 +101,12 @@ def update_map_mode(mode_clicks, mode_ids):
 
     return colors
 
-def generate_empty_map_figure():
+def generate_empty_map_figure() -> go.Figure:
+    """Generate a basic empty map figure.
+
+    Returns:
+        go.Figure: Plotly figure with an empty map.
+    """
     fig = px.scatter_mapbox(
         pd.DataFrame({'location_lat': [], 'location_long': []}),
         lat="location_lat",
@@ -84,9 +121,12 @@ def generate_empty_map_figure():
     return fig
 
 def create_map() -> html.Div:
-    """Assemble les contrôles et la carte."""
-    fig = generate_empty_map_figure() 
+    """Create the complete map component with controls.
 
+    Returns:
+        html.Div: Dash component containing the map and its controls.
+    """
+    fig = generate_empty_map_figure() 
     return html.Div(
         [
             create_map_controls(),
@@ -102,7 +142,15 @@ def create_map() -> html.Div:
         ]
     )
 
-def get_season(date):
+def get_season(date: datetime) -> str:
+    """Determine the season based on the date.
+
+    Args:
+        date (datetime): Date to analyze.
+
+    Returns:
+        str: Name of the season ('Spring', 'Summer', 'Autumn', 'Winter').
+    """
     month = date.month
     if month in [3, 4, 5]:
         return 'Printemps'
@@ -113,7 +161,17 @@ def get_season(date):
     else:
         return 'Hiver'
 
-def generate_map_figure(df, mode="scatter", selected_point=None):
+def generate_map_figure(df: pd.DataFrame, mode: str = "scatter", selected_point: Optional[Dict[Any, Any]] = None) -> go.Figure:
+    """Generate a map figure based on the selected visualization mode.
+
+    Args:
+        df (pd.DataFrame): DataFrame containing migration data.
+        mode (str): Visualization mode ('scatter', 'density', 'trajectory').
+        selected_point (Optional[Dict[Any, Any]]): Selected point to highlight.
+
+    Returns:
+        go.Figure: Plotly map figure with visualized data.
+    """
     season_colors = {
         'Printemps': 'green',
         'Été': 'red',
@@ -143,11 +201,13 @@ def generate_map_figure(df, mode="scatter", selected_point=None):
                 marker=dict(size=15, color="yellow"),
                 name="Point sélectionné",
             )
+    
     elif mode == "density":
         fig = px.density_mapbox(
             df, lat="location_lat", lon="location_long", radius=10, zoom=3
         )
-    else:
+    
+    else:  # Trajectory Mode
         df = df.sort_values(['individual_id', 'timestamp'])
         fig = go.Figure()
         
@@ -217,8 +277,16 @@ def generate_map_figure(df, mode="scatter", selected_point=None):
      Input("current-data", "data")],
     prevent_initial_call=True
 )
-def update_map(app_state, current_data):
-    """Met à jour la carte en fonction du mode et des données."""
+def update_map(app_state: dict, current_data: dict) -> go.Figure:
+    """Update the map based on the application's state and current data.
+
+    Args:
+        app_state (dict): Application state containing the selected visualization mode.
+        current_data (dict): Current migration data to display.
+
+    Returns:
+        go.Figure: Updated Plotly map figure.
+    """
     if not app_state or not current_data:
         return dash.no_update
     

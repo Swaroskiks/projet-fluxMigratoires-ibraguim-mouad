@@ -1,3 +1,10 @@
+"""Component for visualizing monthly migration speeds.
+
+Displays an interactive graph showing the average migration speed per month,
+helping to identify seasonal trends and peak migration periods.
+"""
+
+from typing import List
 from dash import html, dcc, callback, Input, Output, ALL
 import plotly.graph_objects as go
 import dash_bootstrap_components as dbc
@@ -8,8 +15,12 @@ from src.utils import (
     haversine_distance
 )
 
-def create_speed_chart():
-    """Crée le graphique des vitesses moyennes mensuelles."""
+def create_speed_chart() -> html.Div:
+    """Create the monthly average speed chart.
+
+    Returns:
+        html.Div: Dash component containing the chart.
+    """
     return html.Div([
         dbc.Card([
             dbc.CardBody([
@@ -25,8 +36,15 @@ def create_speed_chart():
     Output('monthly-speeds', 'figure'),
     [Input({'type': 'species-button', 'index': ALL}, 'color')]
 )
-def update_speed_chart(colors):
-    """Met à jour le graphique des vitesses mensuelles."""
+def update_speed_chart(colors: List[str]) -> go.Figure:
+    """Update the speed chart based on the selected species.
+    
+    Args:
+        colors (List[str]): List of colors.
+    
+    Returns:
+        go.Figure: Updated speed chart.
+    """
     month_names = {
         1: 'Janvier', 2: 'Février', 3: 'Mars', 4: 'Avril',
         5: 'Mai', 6: 'Juin', 7: 'Juillet', 8: 'Août',

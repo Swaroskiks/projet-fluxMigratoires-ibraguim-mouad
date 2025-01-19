@@ -1,7 +1,10 @@
+"""Footer component for the application."""
+
 from dash import html
 import dash_bootstrap_components as dbc
 
 def create_footer() -> html.Div:
+    """Creates the footer with credits and a link to the source code."""
     return html.Div([
         html.Hr(),
         dbc.Container([
