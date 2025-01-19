@@ -118,7 +118,8 @@ graph TD
   - **Maximum Distance**: Farthest distance between two recorded points.
   - **Duration**: Total tracking duration in days.
 
-
+### **Conclusions**
+This project highlights how geospatial data can be used to analyze and understand migration trends. By studying individual movements across time and locations, we can uncover important patterns and gain a deeper understanding of migration dynamics. The use of interactive maps and statistical tools makes it easier to explore the data and interpret key findings. Overall, this work provides a solid foundation for further research into the factors driving migration and its effects on both global and regional levels
 
 ---
 
